@@ -4,10 +4,15 @@ import { notFound } from "next/navigation";
 import { Package } from "lucide-react";
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache.js";
 
 // Components
 import { ProductCard } from "@/components/storefront";
 import { ProductCardSkeleton } from "@/components/storefront/productCard/ProductCard";
+
+export async function generateStaticParams() {
+    return [{ category: "men" }, { category: "women" }, { category: "kids" }, { category: "all" }]
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
     const { category } = await params
@@ -145,16 +150,29 @@ const getProducts = async (category: string) => {
     }
 }
 
-export default async function ProductsCategoryPage({ params }: {
+export default function ProductsCategoryPage({ params }: {
     params: Promise<{ category: string }>
 }) {
-    const { category } = await params
+    const categoryParma = params.then((sp) => ({ category: sp.category }))
+    return (
+        <Suspense fallback={<ProductsSectionSkeleton />}>
+            <ProductsCategoryContent categoryParam={categoryParma} />
+        </Suspense>
+    )
+}
+
+async function ProductsCategoryContent({ categoryParam }: { categoryParam: Promise<{ category: string }> }) {
+    'use cache'
+    cacheLife("max")
+
+    const { category } = await categoryParam
+
+    cacheTag("products", `products-${category}`)
+
     return (
         <section>
             <h1 className="text-4xl font-extrabold mb-2 pt-6 tracking-tight">Products for {category.substring(0, 1).toUpperCase()}{category.slice(1)}</h1>
-            <Suspense fallback={<ProductsSectionSkeleton />}>
-                <ProductsSection category={category} />
-            </Suspense>
+            <ProductsSection category={category} />
         </section>
     )
 }

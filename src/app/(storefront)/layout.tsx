@@ -1,3 +1,4 @@
+// Components
 import { Toaster } from "@/components/base/sonner";
 import { Footer, Navbar } from "@/components/storefront";
 

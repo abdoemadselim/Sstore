@@ -4,6 +4,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import Image from "next/image"
 import { redirect } from "next/navigation"
 import Link from "next/link.js"
+import { Suspense } from "react"
+import { connection } from "next/server"
 
 // Types
 import { CartType } from "@/types"
@@ -12,6 +14,7 @@ import { BoxIcon } from "lucide-react"
 // Components
 import { Button } from "@/components/base/button"
 import { CheckoutButton, DeleteFromCartButton } from "@/components/base/submit-button"
+import { Skeleton } from "@/components/base/skeleton"
 
 // Actions
 import { deleteFromCart } from "@/actions/cart"
@@ -22,7 +25,15 @@ export const metadata = {
     description: "View the items in your cart at Sstore. Easily manage products, quantities, and proceed to checkout.",
 }
 
-export default async function CartPage() {
+export default function CartPage() {
+    return (
+        <Suspense fallback={<CartPageSkeleton />}>
+            <CartContent />
+        </Suspense>
+    )
+}
+
+async function CartContent() {
     const { getUser } = getKindeServerSession()
     const user = await getUser()
 
@@ -31,8 +42,8 @@ export default async function CartPage() {
     }
 
     const cart: CartType | null = await redis.get(`cart-${user.id}`)
-    const totalPrice = cart?.items.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
 
+    const totalPrice = cart?.items.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
     return (
         <div className="flex flex-col justify-center items-center pt-16 max-w-4xl mx-auto">
             {
@@ -84,5 +95,46 @@ export default async function CartPage() {
             }
 
         </div >
+    )
+}
+
+function CartPageSkeleton() {
+    return (
+        <div className="flex flex-col justify-center items-center pt-16 max-w-4xl mx-auto w-full">
+            <div className="flex flex-col gap-6 w-full">
+                {/* Item skeleton rows */}
+                {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex sm:flex-row flex-col gap-4 w-full py-4 border-b">
+                        <div className="sm:w-35 h-35 relative">
+                            <div className="rounded-md border border-primary/20">
+                                <Skeleton className="h-36 w-36 rounded-md" />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between w-full sm:ml-5">
+                            <div className="flex flex-col gap-2">
+                                <Skeleton className="h-6 w-40" /> {/* product name */}
+                                <Skeleton className="h-4 w-28" /> {/* slug or spacing */}
+                            </div>
+
+                            <div className="flex flex-col items-end justify-between">
+                                <Skeleton className="h-6 w-24" /> {/* quantity + price */}
+                                <Skeleton className="h-10 w-28" /> {/* delete button */}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+
+                {/* Subtotal */}
+                <div className="mt-6 w-full">
+                    <div className="flex justify-between items-center border-t py-3">
+                        <Skeleton className="h-8 w-28" />
+                        <Skeleton className="h-8 w-20" />
+                    </div>
+
+                    <Skeleton className="h-12 w-full mt-4 rounded-md" /> {/* checkout button */}
+                </div>
+            </div>
+        </div>
     )
 }

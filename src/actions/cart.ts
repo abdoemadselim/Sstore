@@ -52,7 +52,6 @@ export const addToCart = async (productId: number) => {
     const { getUser } = getKindeServerSession();
 
     const user = await getUser()
-
     if (!user) {
         redirect("/")
     }
@@ -105,7 +104,7 @@ export const addToCart = async (productId: number) => {
 
     await redis.set(`cart-${user.id}`, newCart)
 
-    revalidatePath("/", "layout")
+    revalidatePath(`/product-${product.slug}`)
 }
 
 export const deleteFromCart = async (formData: FormData) => {
@@ -131,7 +130,8 @@ export const deleteFromCart = async (formData: FormData) => {
         } else {
             redis.set(`cart-${user.id}`, newCart)
         }
-
-        revalidatePath("/", "layout")
     }
+
+    await new Promise((res) => setTimeout(res, 1000))
+    revalidatePath("/cart")
 }

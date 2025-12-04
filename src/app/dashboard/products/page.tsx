@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 // Prisma Client
 import { ProductsSection } from "@/components/dashboard";
 
-export default async function ProductsPage() {
+export default function ProductsPage() {
     return (
         <div className="flex items-end flex-col gap-4">
             <Button className="gap-4 flex py-6 cursor-pointer" asChild>

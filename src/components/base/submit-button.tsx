@@ -31,13 +31,7 @@ export default function SubmitButton({
     )
 }
 
-export function ShoppingBagButton() {
-    const { pending } = useFormStatus()
-
-    const handleClick = () => {
-        toast.success("Product has been added to your cart")
-    }
-
+export function ShoppingBagButton({ pending }: { pending: boolean }) {
     return (
         pending ? (
             <Button disabled size="lg" className="w-full text-lg mt-4 gap-4 cursor-pointer" variant="default">

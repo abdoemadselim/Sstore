@@ -17,7 +17,7 @@ const getData = async () => {
       ORDER BY day;
     `) as {
         revenue: number,
-        day: string
+        day: Date
     }[]
 
     return data.map((item) => ({

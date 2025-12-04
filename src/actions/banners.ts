@@ -10,6 +10,7 @@ import { BannerSchema } from "@/lib/schema/banners";
 
 // Prisma Client
 import prisma from "@/lib/db";
+import { revalidateTag } from "next/cache.js";
 
 export const createBanner = async (prevState: unknown, formData: FormData) => {
     const { getUser } = getKindeServerSession();
@@ -40,6 +41,8 @@ export const createBanner = async (prevState: unknown, formData: FormData) => {
                 formErrors: ['Failed to create the banner. Please try again later.'],
             });
         }
+
+        revalidateTag("banners", "max")
     } catch (error) {
         console.error(error)
         return submission.reply({
@@ -65,6 +68,8 @@ export const deleteBanner = async (formData: FormData) => {
                 id: bannerId as string
             },
         })
+
+        revalidateTag("banners", "max")
     } catch (error) {
         console.error(error)
     }

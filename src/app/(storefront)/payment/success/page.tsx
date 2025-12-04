@@ -10,17 +10,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/base/button";
 import { Card, CardContent } from "@/components/base/card";
 
-// Metadata
-export const metadata = {
-    title: "Payment Successful - Sstore",
-    description: "Thank you for your purchase at Sstore! Your payment was successful. Enjoy your new products.",
-}
-
 export default function PaymentSuccessPage() {
     const router = useRouter()
     useEffect(() => {
         // Invalidate the cache and re-render all server components to update the cart number
-        router.refresh()
     }, [router]);
 
     return (

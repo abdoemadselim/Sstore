@@ -2,8 +2,9 @@
 import prisma from "@/lib/db"
 import { notFound } from "next/navigation";
 import { StarIcon } from "lucide-react";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 
 // Components
 import { AddToCartForm, FeaturedProducts, ImageSlider } from "@/components/storefront";
@@ -16,17 +17,40 @@ import { ProductType } from "@/types";
 // Actions
 import { addToCart } from "@/actions/cart";
 
+const getProduct = cache(async (slug: string) => {
+    const product = await prisma.product.findUnique({
+        where: {
+            slug: slug
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            images: true,
+            category: true,
+        }
+    })
+
+    if (!product)
+        return notFound()
+
+    return product;
+})
+
+export async function generateStaticParams() {
+    const products = await prisma.product.findMany({
+        select: {
+            slug: true
+        }
+    })
+    return products
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params
 
-    const product = await prisma.product.findUnique({
-        where: { slug },
-        select: {
-            name: true,
-            description: true,
-            images: true,
-        }
-    })
+    const product = await getProduct(slug)
 
     if (!product) {
         return {
@@ -45,7 +69,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             siteName: "Sstore",
             images: [{ url: product.images[0], width: 1200, height: 630, alt: product.name }],
             locale: "en_US",
-            type: "product",
         },
         twitter: {
             card: "summary_large_image",
@@ -56,37 +79,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
 }
 
-const getProduct = async (slug: string) => {
-    await new Promise((res) => setTimeout(res, 10000))
-    const product = prisma.product.findUnique({
-        where: {
-            slug: slug
-        },
-        select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            images: true,
-            category: true,
-        }
-    })
-
-    if (!product)
-        return notFound()
-
-    return product;
-}
-
-export default async function ProductPage({ params }: {
+export default function ProductPage({ params }: {
     params: Promise<{ slug: string }>
 }) {
-    const { slug } = await params
+    const slug = params.then((sp) => ({ slug: sp.slug }))
 
     return (
         <>
             <Suspense fallback={<ProductSkeleton />}>
-                <ProductContent slug={slug} />
+                <ProductContent slugParam={slug} />
             </Suspense>
 
 
@@ -97,7 +98,14 @@ export default async function ProductPage({ params }: {
     )
 }
 
-async function ProductContent({ slug }: { slug: string }) {
+async function ProductContent({ slugParam }: { slugParam: Promise<{ slug: string }> }) {
+    'use cache'
+    cacheLife("max")
+
+    const { slug } = await slugParam
+
+    cacheTag(`product-${slug}`, "products")
+
     const product = await getProduct(slug) as ProductType
     const addToCartAction = addToCart.bind(null, product.id)
 
@@ -108,11 +116,11 @@ async function ProductContent({ slug }: { slug: string }) {
                 <h1 className="text-4xl font-extrabold">{product.name}</h1>
                 <p className="pt-2 font-semibold text-xl">${product.price}</p>
                 <div className="flex gap-2 items-center mt-2">
-                    <StarIcon className="text-yellow-500 fill-yellow-500" size={20} />
-                    <StarIcon className="text-yellow-500 fill-yellow-500" size={20} />
-                    <StarIcon className="text-yellow-500 fill-yellow-500" size={20} />
-                    <StarIcon className="text-yellow-500 fill-yellow-500" size={20} />
-                    <StarIcon className="text-yellow-500 fill-yellow-500" size={20} />
+                    {
+                        [1, 2, 3, 4, 5].map((item) => (
+                            <StarIcon key={item} className="text-yellow-500 fill-yellow-500" size={20} />
+                        ))
+                    }
                 </div>
                 <p className="text-muted-foreground text-lg mt-8">{product.description}</p>
                 <AddToCartForm productName={product.name} action={addToCartAction} />
@@ -140,9 +148,9 @@ function ProductSkeleton() {
                 <Skeleton className="h-[15px] mt-4" />
                 <Skeleton className="h-[15px] items-center mt-4 bg-yellow-300/20 max-w-[200px]" />
 
-                <Skeleton className="h-[20px] mt-12" />
+                <Skeleton className="h-5 mt-12" />
 
-                <Skeleton className="h-[20px] bg-blue-500/20 mt-12" />
+                <Skeleton className="h-5 bg-blue-500/20 mt-12" />
             </section>
         </section>
     )

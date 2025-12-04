@@ -33,10 +33,12 @@ export const POST = async (req: NextRequest) => {
                 }
             })
             await redis.del(`cart-${session.metadata?.userId}`)
+            revalidatePath("/payment/success")
             break;
         default:
             console.log("Unhandled stripe event")
     }
 
+    await new Promise((res) => setTimeout(res, 2000))
     return new Response(null, { status: 200 })
 }

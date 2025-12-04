@@ -1,12 +1,17 @@
 // Libs
 import prisma from "@/lib/db";
 import { Package } from "lucide-react";
+import { cacheLife, cacheTag } from "next/cache.js";
 
 // Components
 import { ProductCard } from "@/components/storefront";
-import { ProductCardSkeleton } from "../productCard/ProductCard";
+import { ProductCardSkeleton } from "@/components/storefront/productCard/ProductCard";
 
 const getProducts = async () => {
+    'use cache'
+    cacheLife("max")
+    cacheTag("products")
+
     const products = prisma.product.findMany({
         select: {
             id: true,

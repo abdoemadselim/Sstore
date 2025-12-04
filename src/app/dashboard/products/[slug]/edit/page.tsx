@@ -6,6 +6,7 @@ import { notFound } from "next/navigation"
 
 // Components
 import EditForm from "@/components/dashboard/editForm/EditForm"
+import { Suspense } from "react"
 
 const getProduct = async (slug: string) => {
     const product = await prisma.product.findUnique({
@@ -26,7 +27,20 @@ export default async function EditProductPage({
 }: {
     params: Promise<{ slug: string }>
 }) {
-    const { slug } = await params;
+
+    const slugParam = params.then((sp) => ({ slug: sp.slug }))
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <EditProductContent slugParam={slugParam} />
+        </Suspense>
+    )
+}
+
+async function EditProductContent({ slugParam
+}: {
+    slugParam: Promise<{ slug: string }>
+}) {
+    const { slug } = await slugParam;
     const data = await getProduct(slug)
 
     return (

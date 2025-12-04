@@ -1,10 +1,10 @@
 // Libs
 import { Suspense } from "react"
+import type { Metadata } from "next"
 
 // Components
 import { CategorySelection, Hero, FeaturedProducts } from "@/components/storefront"
 import { FeaturedProductsSkeleton } from "@/components/storefront/featuredProducts/FeaturedProducts"
-import type { Metadata } from "next"
 
 // Metadata
 export const metadata: Metadata = {

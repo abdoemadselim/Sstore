@@ -17,11 +17,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { NavbarLinks } from "@/components/dashboard"
 import { DropdownMenuSeparator } from "@/components/base/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/base/avatar"
+import { Suspense } from "react"
 
-export default async function DashboardNavbar() {
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
-
+export default function DashboardNavbar() {
     return (
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-5 w-full">
             <header className="flex items-center justify-between bg-white h-22">
@@ -30,7 +28,9 @@ export default async function DashboardNavbar() {
                         <h1 className="text-2xl font-medium"><span className="text-primary">S</span>store</h1>
                     </Link>
                     <nav className="gap-2 sm:flex hidden font-medium">
-                        <NavbarLinks />
+                        <Suspense>
+                            <NavbarLinks />
+                        </Suspense>
                     </nav>
                 </div>
 
@@ -46,7 +46,9 @@ export default async function DashboardNavbar() {
                             <SheetTitle>Sstore</SheetTitle>
                         </SheetHeader>
                         <nav className="flex flex-col font-bold gap-4 text-xl">
-                            <NavbarLinks />
+                            <Suspense>
+                                <NavbarLinks />
+                            </Suspense>
                         </nav>
 
                         <Button className="flex gap-8 mt-8 text-lg w-fit" variant="destructive" asChild>
@@ -61,12 +63,9 @@ export default async function DashboardNavbar() {
                 {/* Large screens */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="rounded-full w-10 h-10 cursor-pointer sm:flex hidden">
-                            <Avatar className="w-10 h-10">
-                                <AvatarFallback>{user?.given_name?.slice(0, 3)}</AvatarFallback>
-                                <AvatarImage src={user?.picture as string}></AvatarImage>
-                            </Avatar>
-                        </Button>
+                        <Suspense>
+                            <UserAvatar />
+                        </Suspense>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-50" align="end">
                         <DropdownMenuLabel className="text-lg">My Account</DropdownMenuLabel>
@@ -87,5 +86,19 @@ export default async function DashboardNavbar() {
                 </DropdownMenu>
             </header>
         </div>
+    )
+}
+
+async function UserAvatar() {
+    const { getUser } = getKindeServerSession()
+    const user = await getUser()
+
+    return (
+        <Button variant="ghost" className="rounded-full w-10 h-10 cursor-pointer sm:flex hidden">
+            <Avatar className="w-10 h-10">
+                <AvatarFallback>{user?.given_name?.slice(0, 3)}</AvatarFallback>
+                <AvatarImage src={user?.picture as string}></AvatarImage>
+            </Avatar>
+        </Button>
     )
 }

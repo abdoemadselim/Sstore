@@ -9,13 +9,27 @@ import { Input } from "@/components/base/input";
 
 // Actions
 import { deleteBanner } from "@/actions/banners";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
-export default async function DeleteBannerPage({
+export default function DeleteBannerPage({
     params
 }: {
     params: Promise<{ id: string }>
 }) {
-    const { id } = await params;
+    const idParam = params.then((sp) => ({ id: sp.id }))
+    return (
+        <Suspense fallback={<div>
+            <Loader2 className="animate-spin" />
+            <p>Loading...</p>
+        </div>}>
+            <BannersDeleteContent idParam={idParam} />
+        </Suspense>
+    )
+}
+
+async function BannersDeleteContent({ idParam }: { idParam: Promise<{ id: string }> }) {
+    const { id } = await idParam;
 
     return (
         <div className="w-full h-[80vh] justify-center flex items-center">

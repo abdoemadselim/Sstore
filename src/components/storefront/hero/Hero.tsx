@@ -1,4 +1,9 @@
+// Libs
+import prisma from "@/lib/db"
+import { cacheLife, cacheTag } from "next/cache";
+import Image from "next/image";
 
+// Components
 import {
     Carousel,
     CarouselContent,
@@ -6,10 +11,12 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/base/carousel"
-import prisma from "@/lib/db"
-import Image from "next/image.js";
 
 const getBanners = async () => {
+    'use cache'
+    cacheLife("max")
+    cacheTag("banners")
+
     const banners = prisma.banner.findMany({
         orderBy: {
             createdAt: "desc"

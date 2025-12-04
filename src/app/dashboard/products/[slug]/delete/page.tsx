@@ -9,14 +9,24 @@ import { Input } from "@/components/base/input";
 
 // Actions
 import { deleteProduct } from "@/actions/products";
+import { Suspense } from "react";
 
-export default async function DeleteProductPage({
+export default function DeleteProductPage({
     params
 }: {
     params: Promise<{ slug: string }>
 }) {
-    const { slug } = await params;
+    const slugParam = params.then((sp) => ({ slug: sp.slug }));
 
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <DeleteProductContent slugParam={slugParam} />
+        </Suspense>
+    )
+}
+
+async function DeleteProductContent({ slugParam }: { slugParam: Promise<{ slug: string }> }) {
+    const { slug } = await slugParam
     return (
         <div className="w-full h-[80vh] justify-center flex items-center">
             <Card className="max-w-xl w-full">

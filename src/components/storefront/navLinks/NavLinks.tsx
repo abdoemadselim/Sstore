@@ -4,6 +4,9 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
+// Components
+import { Skeleton } from "@/components/base/skeleton"
+
 const links = [
     {
         href: "/",
@@ -44,4 +47,14 @@ export default function NavLinks() {
             }
         </nav>
     )
+}
+
+export function NavLinksSkeleton() {
+    return (
+        <div className="flex gap-6 ml-10">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-6 w-14" />
+        </div>
+    );
 }

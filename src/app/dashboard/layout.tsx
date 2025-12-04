@@ -6,14 +6,14 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 // Components
 import { DashboardNavbar } from "@/components/dashboard";
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-    const { getUser } = getKindeServerSession()
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+    // const { getUser } = getKindeServerSession()
 
-    const user = await getUser()
+    // const user = await getUser()
 
-    if (!user || user.email !== "abdulrahman3mad@gmail.com") {
-        redirect("/")
-    }
+    // if (!user || user.email !== "abdulrahman3mad@gmail.com") {
+    //     redirect("/")
+    // }
 
     return (
         <>

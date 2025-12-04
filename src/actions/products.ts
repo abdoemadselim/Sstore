@@ -11,6 +11,7 @@ import { ProductSchema } from "@/lib/schema/products";
 // Prisma Client
 import prisma from "@/lib/db";
 import { getBlurHashFromURL } from "@/lib/blurhash-encoder";
+import { revalidateTag } from "next/cache.js";
 
 export const createProduct = async (prevState: unknown, formData: FormData) => {
     const { getUser } = getKindeServerSession();
@@ -52,6 +53,9 @@ export const createProduct = async (prevState: unknown, formData: FormData) => {
                 formErrors: ['Failed to create the product. Please try again later.'],
             });
         }
+
+        revalidateTag("products", "max")
+        revalidateTag(`/products-${submission.value.category}`, "max")
     } catch (error) {
         console.error(error)
         return submission.reply({
@@ -102,6 +106,10 @@ export const updateProduct = async (_prevState: unknown, formData: FormData) => 
                 formErrors: ['Failed to create the product. Please try again later.'],
             });
         }
+
+        revalidateTag("products", "max")
+        revalidateTag(`/products-${submission.value.category}`, "max")
+        revalidateTag(`/product-${product.slug}`, "max")
     } catch (error) {
         console.error(error)
         return submission.reply({
@@ -122,11 +130,15 @@ export const deleteProduct = async (formData: FormData) => {
 
     try {
         const productSlug = formData.get("productSlug")
-        await prisma.product.delete({
+        const product = await prisma.product.delete({
             where: {
                 slug: productSlug as string
             },
         })
+
+        revalidateTag("products", "max")
+        revalidateTag(`/products-${product.category}`, "max")
+        revalidateTag(`/product-${product.slug}`, "max")
     } catch (error) {
         console.error(error)
     }
