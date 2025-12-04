@@ -14,6 +14,7 @@ export default function PaymentSuccessPage() {
     const router = useRouter()
     useEffect(() => {
         // Invalidate the cache and re-render all server components to update the cart number
+        router.refresh()
     }, [router]);
 
     return (

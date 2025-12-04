@@ -167,7 +167,8 @@ async function ProductsCategoryContent({ categoryParam }: { categoryParam: Promi
 
     const { category } = await categoryParam
 
-    cacheTag("products", `products-${category}`)
+    cacheTag("products")
+    cacheTag(`products-${category}`)
 
     return (
         <section>

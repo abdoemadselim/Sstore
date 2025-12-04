@@ -47,8 +47,8 @@ export default async function DashboardRecentSales() {
                         <>
                             {
                                 sales.map((sale) => (
-                                    <div key={sale.id} className="flex justify-between items-center gap-4">
-                                        <div className="flex items-center gap-8">
+                                    <div key={sale.id} className="flex flex-row justify-between items-center gap-4">
+                                        <div className="flex sm:flex-row flex-col sm:items-center sm:gap-8 gap-2">
                                             <Avatar>
                                                 <AvatarFallback>{sale.user?.firstName.slice(0, 2).toUpperCase()}</AvatarFallback>
                                                 <AvatarImage

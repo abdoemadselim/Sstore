@@ -55,7 +55,7 @@ export const createProduct = async (prevState: unknown, formData: FormData) => {
         }
 
         revalidateTag("products", "max")
-        revalidateTag(`/products-${submission.value.category}`, "max")
+        revalidateTag(`products-${submission.value.category}`, "max")
     } catch (error) {
         console.error(error)
         return submission.reply({
@@ -108,8 +108,8 @@ export const updateProduct = async (_prevState: unknown, formData: FormData) => 
         }
 
         revalidateTag("products", "max")
-        revalidateTag(`/products-${submission.value.category}`, "max")
-        revalidateTag(`/product-${product.slug}`, "max")
+        revalidateTag(`products-${submission.value.category}`, "max")
+        revalidateTag(`product-${product.slug}`, "max")
     } catch (error) {
         console.error(error)
         return submission.reply({
@@ -137,8 +137,8 @@ export const deleteProduct = async (formData: FormData) => {
         })
 
         revalidateTag("products", "max")
-        revalidateTag(`/products-${product.category}`, "max")
-        revalidateTag(`/product-${product.slug}`, "max")
+        revalidateTag(`products-${product.category}`, "max")
+        revalidateTag(`product-${product.slug}`, "max")
     } catch (error) {
         console.error(error)
     }

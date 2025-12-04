@@ -41,7 +41,7 @@ export default async function Hero() {
                                     className="w-full h-full object-cover rounded-xl"
                                     fill
                                 />
-                                <div className="absolute top-6 left-6 bg-black/70 text-white py-6 px-10 hover:scale-105 rounded-xl shadow-xl transition-transform lg:text-4xl text-xl">{banner.title}</div>
+                                <div className="absolute top-6 sm:left-6 left-2 bg-black/70 text-white py-6 sm:px-10 px-4 hover:scale-105 rounded-xl shadow-xl transition-transform lg:text-4xl text-xl">{banner.title}</div>
                             </div>
                         </CarouselItem>
                     ))

@@ -3,6 +3,7 @@ import { Link2, LogOutIcon, MenuIcon } from "lucide-react"
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs"
 import Link from "next/link"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { Suspense } from "react"
 
 // Components
 import { Button } from "@/components/base/button"
@@ -17,7 +18,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { NavbarLinks } from "@/components/dashboard"
 import { DropdownMenuSeparator } from "@/components/base/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/base/avatar"
-import { Suspense } from "react"
+
 
 export default function DashboardNavbar() {
     return (
