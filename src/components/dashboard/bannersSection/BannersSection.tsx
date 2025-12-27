@@ -47,6 +47,7 @@ export default async function BannersSection() {
                                                 alt={banner.title}
                                                 width={64}
                                                 height={64}
+                                                fetchPriority="high"
                                             />
                                         </TableCell>
                                         <TableCell className="text-base">

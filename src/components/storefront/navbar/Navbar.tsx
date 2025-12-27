@@ -29,7 +29,6 @@ export default function Navbar() {
                 </div>
             </div>
 
-
             {/* For Mobile Screens */}
             <Sheet>
                 <SheetTrigger asChild>
