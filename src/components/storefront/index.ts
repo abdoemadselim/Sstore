@@ -8,5 +8,4 @@ export { default as FeaturedProducts } from "./featuredProducts/FeaturedProducts
 export { default as ProductCard } from "./productCard/ProductCard"
 export { default as ImageSlider } from "./imageSlider/ImageSlider"
 export { default as Footer } from "./footer/Footer"
-export { default as AddToCartForm } from "./addToCartForm/AddToCartForm"
 export { default as NavbarCart } from "./navbarCart/NavbarCart"

@@ -31,7 +31,9 @@ export default function SubmitButton({
     )
 }
 
-export function ShoppingBagButton({ pending }: { pending: boolean }) {
+export function ShoppingBagButton() {
+    const { pending } = useFormStatus();
+
     return (
         pending ? (
             <Button disabled size="lg" className="w-full text-lg mt-4 gap-4 cursor-pointer" variant="default">

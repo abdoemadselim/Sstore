@@ -7,9 +7,10 @@ import { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 
 // Components
-import { AddToCartForm, FeaturedProducts, ImageSlider } from "@/components/storefront";
+import { FeaturedProducts, ImageSlider } from "@/components/storefront";
 import { FeaturedProductsSkeleton } from "@/components/storefront/featuredProducts/FeaturedProducts";
 import { Skeleton } from "@/components/base/skeleton";
+import { ShoppingBagButton } from "@/components/base/submit-button";
 
 // Types
 import { ProductType } from "@/types";
@@ -123,7 +124,9 @@ async function ProductContent({ slugParam }: { slugParam: Promise<{ slug: string
                     }
                 </div>
                 <p className="text-muted-foreground text-lg mt-8">{product.description}</p>
-                <AddToCartForm productName={product.name} action={addToCartAction} />
+                <form onSubmit={addToCartAction}>
+                    <ShoppingBagButton />
+                </form>
             </section>
         </section>
     )
