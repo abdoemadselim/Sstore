@@ -124,7 +124,7 @@ async function ProductContent({ slugParam }: { slugParam: Promise<{ slug: string
                     }
                 </div>
                 <p className="text-muted-foreground text-lg mt-8">{product.description}</p>
-                <form onSubmit={addToCartAction}>
+                <form action={addToCartAction}>
                     <ShoppingBagButton />
                 </form>
             </section>

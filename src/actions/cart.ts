@@ -53,7 +53,7 @@ export const addToCart = async (productId: number) => {
 
     const user = await getUser()
     if (!user) {
-        redirect("/")
+        redirect("/api/auth/login")
     }
 
     // get the cart from redis if exists
