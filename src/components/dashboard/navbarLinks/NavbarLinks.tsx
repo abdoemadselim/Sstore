@@ -30,7 +30,7 @@ export default function NavbarLinks() {
             <Link
                 key={link.text}
                 href={link.href}
-                className={`${pathName == link.href.toLowerCase() && 'bg-primary hover:bg-primary text-white'} hover:bg-gray-200 rounded-sm px-2 py-1`}
+                className={`${pathName == link.href.toLowerCase() && 'bg-primary/80 hover:bg-primary/80 text-white'} hover:bg-gray-200 rounded-sm px-2 py-1`}
             >{link.text}
             </Link>
         ))

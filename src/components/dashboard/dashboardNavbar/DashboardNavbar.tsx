@@ -18,7 +18,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { NavbarLinks } from "@/components/dashboard"
 import { DropdownMenuSeparator } from "@/components/base/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/base/avatar"
-
+import { Skeleton } from "@/components/base/skeleton"
 
 export default function DashboardNavbar() {
     return (
@@ -61,30 +61,11 @@ export default function DashboardNavbar() {
                     </SheetContent>
                 </Sheet>
 
-                {/* Large screens */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Suspense>
-                            <UserAvatar />
-                        </Suspense>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-50" align="end">
-                        <DropdownMenuLabel className="text-lg">My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="flex items-center justify-between gap-8 cursor-pointer text-lg" asChild>
-                            <LogoutLink>
-                                Store front
-                                <Link2 className="w-10 h-10" />
-                            </LogoutLink>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center justify-between gap-8 cursor-pointer text-lg" variant="destructive" asChild>
-                            <LogoutLink>
-                                Log out
-                                <LogOutIcon className="w-10 h-10" />
-                            </LogoutLink>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Suspense fallback={
+                    <Skeleton className="rounded-full w-10 h-10 bg-gray-100" />
+                }>
+                    <UserAvatar />
+                </Suspense>
             </header>
         </div>
     )
@@ -95,11 +76,31 @@ async function UserAvatar() {
     const user = await getUser()
 
     return (
-        <Button variant="ghost" className="rounded-full w-10 h-10 cursor-pointer sm:flex hidden">
-            <Avatar className="w-10 h-10">
-                <AvatarFallback>{user?.given_name?.slice(0, 3)}</AvatarFallback>
-                <AvatarImage src={user?.picture as string}></AvatarImage>
-            </Avatar>
-        </Button>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="rounded-full w-10 h-10 cursor-pointer sm:flex hidden">
+                    <Avatar className="w-10 h-10">
+                        <AvatarFallback>{user?.given_name?.slice(0, 3)}</AvatarFallback>
+                        <AvatarImage src={user?.picture as string}></AvatarImage>
+                    </Avatar>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-50" align="end">
+                <DropdownMenuLabel className="text-base">My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="flex items-center justify-between gap-8 cursor-pointer text-base" asChild>
+                    <LogoutLink>
+                        Store front
+                        <Link2 className="w-10 h-10" />
+                    </LogoutLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center justify-between gap-8 cursor-pointer text-base" variant="destructive" asChild>
+                    <LogoutLink>
+                        Log out
+                        <LogOutIcon className="w-10 h-10" />
+                    </LogoutLink>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }

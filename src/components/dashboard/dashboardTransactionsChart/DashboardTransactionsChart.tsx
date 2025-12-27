@@ -43,7 +43,7 @@ export default async function DashboardTransactionsChart() {
                     ) : (
                         <div className="flex justify-center flex-col items-center gap-4">
                             <LineChart size={60} className="text-primary" />
-                            <p className="text-center text-muted-foreground">No orders created yet in your store</p>
+                            <p className="text-center text-muted-foreground">You have no orders in the last 7 days</p>
                         </div>
                     )
                 }
